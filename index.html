@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmación de Asistencia - Cumpleaños de Zoe</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #f7f7f7;
+        }
+        h1, h3 {
+            color: #ff69b4;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .guest {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            font-size: 1.5em; /* Doble del tamaño original */
+        }
+        .guest label {
+            flex: 1;
+        }
+        .checkbox-group {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            white-space: nowrap;
+        }
+        .checkbox-group > div {
+            margin-left: 40px; /* Espaciado de aproximadamente 5 espacios */
+        }
+        .sublist {
+            margin-top: 20px;
+        }
+        ul {
+            padding: 0;
+            list-style-type: none;
+        }
+        li {
+            padding: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Confirmación de Asistencia</h1>
+        <p>Por favor, selecciona tu respuesta para cada invitado:</p>
+        <div id="guestList"></div>
+
+        <div class="sublist">
+            <h3>Los que van</h3>
+            <ul id="goingList"></ul>
+        </div>
+        <div class="sublist">
+            <h3>Los que no van</h3>
+            <ul id="notGoingList"></ul>
+        </div>
+        <div class="sublist">
+            <h3>Los que no saben</h3>
+            <ul id="unsureList"></ul>
+        </div>
+    </div>
+
+    <script>
+        const invitados = [
+            "Martín", "Ludmila", "Zoe", "Gigi", "Rober", "Sebas", "Bauti", "Facu",
+            "Marce", "Pau", "Jose", "Chupe", "Nova", "Javi", "Sabri", "Hija",
+            "Hijo1", "Hijo2", "Naty", "Rubén", "Christian", "Nare", "Alan",
+            "Luciano", "Ricardo", "Débora"
+        ];
+
+        const guestList = document.getElementById("guestList");
+
+        // Crear los elementos de la lista de invitados
+        invitados.forEach(nombre => {
+            const guestDiv = document.createElement("div");
+            guestDiv.classList.add("guest");
+
+            const label = document.createElement("label");
+            label.textContent = nombre;
+
+            const checkboxGroup = document.createElement("div");
+            checkboxGroup.classList.add("checkbox-group");
+
+            const voyCheckbox = createCheckbox("voy", nombre, "Voy");
+            const noVoyCheckbox = createCheckbox("noVoy", nombre, "No voy");
+            const noSeCheckbox = createCheckbox("noSe", nombre, "Aún no sé");
+
+            checkboxGroup.appendChild(voyCheckbox);
+            checkboxGroup.appendChild(noVoyCheckbox);
+            checkboxGroup.appendChild(noSeCheckbox);
+
+            guestDiv.appendChild(label);
+            guestDiv.appendChild(checkboxGroup);
+            guestList.appendChild(guestDiv);
+        });
+
+        function createCheckbox(className, name, labelText) {
+            const checkboxContainer = document.createElement("div");
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.className = className;
+            checkbox.dataset.name = name;
+
+            const label = document.createElement("label");
+            label.textContent = labelText;
+
+            checkboxContainer.appendChild(checkbox);
+            checkboxContainer.appendChild(label);
+            return checkboxContainer;
+        }
+
+        // Función para actualizar las listas dinámicas
+        function updateLists() {
+            const goingList = document.getElementById("goingList");
+            const notGoingList = document.getElementById("notGoingList");
+            const unsureList = document.getElementById("unsureList");
+
+            goingList.innerHTML = "";
+            notGoingList.innerHTML = "";
+            unsureList.innerHTML = "";
+
+            invitados.forEach(nombre => {
+                const voy = document.querySelector(`.voy[data-name="${nombre}"]`).checked;
+                const noVoy = document.querySelector(`.noVoy[data-name="${nombre}"]`).checked;
+                const noSe = document.querySelector(`.noSe[data-name="${nombre}"]`).checked;
+
+                const li = document.createElement("li");
+                li.textContent = nombre;
+
+                if (voy) goingList.appendChild(li);
+                if (noVoy) notGoingList.appendChild(li);
+                if (noSe) unsureList.appendChild(li);
+            });
+        }
+
+        // Añadir eventos de cambio a todos los checkbox
+        document.querySelectorAll("input[type='checkbox']").forEach(checkbox => {
+            checkbox.addEventListener("change", event => {
+                const group = event.target.closest(".checkbox-group");
+                group.querySelectorAll("input[type='checkbox']").forEach(cb => {
+                    if (cb !== event.target) cb.checked = false;
+                });
+                updateLists();
+            });
+        });
+    </script>
+</body>
+</html>
