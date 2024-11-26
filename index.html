@@ -29,7 +29,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            font-size: 1.5em; /* Tamaño grande para nombres */
+            font-size: 1.5em;
         }
         .guest label {
             flex: 1;
@@ -55,9 +55,9 @@
         /* Responsive design */
         @media (max-width: 600px) {
             .guest {
-                flex-direction: column; /* Ajusta los elementos en columna */
+                flex-direction: column;
                 align-items: flex-start;
-                font-size: 1.2em; /* Tamaño más pequeño en mobile */
+                font-size: 1.2em;
             }
             .checkbox-group {
                 justify-content: flex-start;
@@ -97,6 +97,9 @@
 
         const guestList = document.getElementById("guestList");
 
+        // Cargar estado guardado desde localStorage
+        const savedSelections = JSON.parse(localStorage.getItem("selections")) || {};
+
         // Crear los elementos de la lista de invitados
         invitados.forEach(nombre => {
             const guestDiv = document.createElement("div");
@@ -131,12 +134,39 @@
             const label = document.createElement("label");
             label.textContent = labelText;
 
+            // Restaurar estado desde localStorage
+            if (savedSelections[name] === className) {
+                checkbox.checked = true;
+            }
+
+            checkbox.addEventListener("change", () => {
+                const group = checkbox.closest(".checkbox-group");
+                group.querySelectorAll("input[type='checkbox']").forEach(cb => {
+                    if (cb !== checkbox) cb.checked = false;
+                });
+                saveSelections();
+                updateLists();
+            });
+
             checkboxContainer.appendChild(checkbox);
             checkboxContainer.appendChild(label);
             return checkboxContainer;
         }
 
-        // Función para actualizar las listas dinámicas
+        function saveSelections() {
+            const selections = {};
+            invitados.forEach(nombre => {
+                const voy = document.querySelector(`.voy[data-name="${nombre}"]`).checked;
+                const noVoy = document.querySelector(`.noVoy[data-name="${nombre}"]`).checked;
+                const noSe = document.querySelector(`.noSe[data-name="${nombre}"]`).checked;
+
+                if (voy) selections[nombre] = "voy";
+                if (noVoy) selections[nombre] = "noVoy";
+                if (noSe) selections[nombre] = "noSe";
+            });
+            localStorage.setItem("selections", JSON.stringify(selections));
+        }
+
         function updateLists() {
             const goingList = document.getElementById("goingList");
             const notGoingList = document.getElementById("notGoingList");
@@ -160,17 +190,10 @@
             });
         }
 
-        // Añadir eventos de cambio a todos los checkbox
-        document.querySelectorAll("input[type='checkbox']").forEach(checkbox => {
-            checkbox.addEventListener("change", event => {
-                const group = event.target.closest(".checkbox-group");
-                group.querySelectorAll("input[type='checkbox']").forEach(cb => {
-                    if (cb !== event.target) cb.checked = false;
-                });
-                updateLists();
-            });
-        });
+        // Inicializar las listas dinámicas
+        updateLists();
     </script>
 </body>
 </html>
+
 
