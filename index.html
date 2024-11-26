@@ -25,10 +25,11 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
         .guest {
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             display: flex;
             align-items: center;
-            font-size: 1.5em; /* Doble del tamaño original */
+            justify-content: space-between;
+            font-size: 1.5em; /* Tamaño grande para nombres */
         }
         .guest label {
             flex: 1;
@@ -37,10 +38,9 @@
             display: flex;
             gap: 15px;
             justify-content: flex-end;
-            white-space: nowrap;
         }
         .checkbox-group > div {
-            margin-left: 40px; /* Espaciado de aproximadamente 5 espacios */
+            margin-left: 20px;
         }
         .sublist {
             margin-top: 20px;
@@ -51,6 +51,19 @@
         }
         li {
             padding: 5px 0;
+        }
+        /* Responsive design */
+        @media (max-width: 600px) {
+            .guest {
+                flex-direction: column; /* Ajusta los elementos en columna */
+                align-items: flex-start;
+                font-size: 1.2em; /* Tamaño más pequeño en mobile */
+            }
+            .checkbox-group {
+                justify-content: flex-start;
+                gap: 10px;
+                margin-top: 5px;
+            }
         }
     </style>
 </head>
@@ -160,3 +173,4 @@
     </script>
 </body>
 </html>
+
