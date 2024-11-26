@@ -25,16 +25,15 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
         .guest {
-            color
             margin-bottom: 15px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             font-size: 1.5em;
-            color:#8a2be2;
         }
-        .guest label {
+        .guest .guest-name {
             flex: 1;
+            color: violet; /* Cambia el color de los nombres */
         }
         .checkbox-group {
             display: flex;
@@ -71,7 +70,8 @@
 </head>
 <body>
     <div class="container">
-        <h1>Lista cumple de Zoe</h1>
+        <h1>Confirmación de Asistencia</h1>
+        <p>Por favor, selecciona tu respuesta para cada invitado:</p>
         <div id="guestList"></div>
 
         <div class="sublist">
@@ -98,16 +98,15 @@
 
         const guestList = document.getElementById("guestList");
 
-        // Cargar estado guardado desde localStorage
         const savedSelections = JSON.parse(localStorage.getItem("selections")) || {};
 
-        // Crear los elementos de la lista de invitados
         invitados.forEach(nombre => {
             const guestDiv = document.createElement("div");
             guestDiv.classList.add("guest");
 
             const label = document.createElement("label");
             label.textContent = nombre;
+            label.classList.add("guest-name"); // Clase para nombres en violeta
 
             const checkboxGroup = document.createElement("div");
             checkboxGroup.classList.add("checkbox-group");
@@ -135,7 +134,6 @@
             const label = document.createElement("label");
             label.textContent = labelText;
 
-            // Restaurar estado desde localStorage
             if (savedSelections[name] === className) {
                 checkbox.checked = true;
             }
@@ -191,10 +189,10 @@
             });
         }
 
-        // Inicializar las listas dinámicas
         updateLists();
     </script>
 </body>
 </html>
+
 
 
